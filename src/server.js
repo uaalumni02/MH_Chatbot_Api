@@ -11,6 +11,8 @@ const port = process.env.PORT || 3000;
 
 const router = express.Router();
 
+import userRoutes from "./routes/user.routes";
+
 const corsOptions = {
   origin: "http://localhost:3001", // Front-end origin
   credentials: true, // Allow cookies and credentials
@@ -30,6 +32,8 @@ try {
 } catch (err) {
   console.error("Unable to Connect to MongoDB", err);
 }
+
+router.use("/user", userRoutes);
 
 app.use("/api", router);
 
