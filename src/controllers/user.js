@@ -44,6 +44,62 @@ class UserData {
       return Response.responseServerError(res);
     }
   }
+  static async userLogin(req, res) {
+    const { userName, password } = req.body;
+    try {
+      const result = await validator.validateAsync(req.body);
+      if (!result.error) {
+        const user = await Db.findUser(User, userName);
+        if (user == null) {
+          return Response.responseBadAuth(res, "Invalid username or password");
+        }
+
+        const isSamePassword = await bcrypt.comparePassword(
+          password,
+          user.password
+        );
+        if (!isSamePassword) {
+          return Response.responseBadAuth(res, "Invalid username or password");
+        }
+
+        const token = Token.sign({
+          userName: user.userName,
+          userId: user._id,
+        });
+
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+        });
+
+        return res.status(200).json({ token, user });
+      } else {
+        return Response.responseInvalidInput(res);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      return Response.responseServerError(res);
+    }
+  }
+
+  static async getAllUsers(req, res) {
+    try {
+      const allUsers = await Db.getAllUsers(User);
+      return Response.responseOk(res, allUsers);
+    } catch (error) {
+      return Response.responseNotFound(res);
+    }
+  }
+  static async getUserById(req, res) {
+    const { id } = req.params;
+    try {
+      const userById = await Db.getUserById(User, id);
+      return Response.responseOk(res, userById);
+    } catch (error) {
+      return Response.responseNotFound(res);
+    }
+  }
 }
 
 export default UserData;
