@@ -27,11 +27,33 @@ class ChatData {
 
       const summaryResponse = response.choices[0].message.content;
 
-      console.log(summaryResponse);
+      // Analyze user mood
+      const moodAnalysis = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content:
+              "Analyze the following message and determine the user's mood (positive, neutral, or negative) and provide a mood score (-1 for negative, 0 for neutral, 1 for positive): " +
+              prompt,
+          },
+        ],
+        max_tokens: 10,
+        temperature: 0.5,
+      });
+
+      if (!moodAnalysis.choices[0].message.content) {
+        throw new Error("Invalid response from OpenAI API for mood analysis");
+      }
+
+      const moodResponse = moodAnalysis.choices[0].message.content;
+
+      console.log(summaryResponse, moodResponse);
 
       return res.status(200).json({
         success: true,
         data: summaryResponse,
+        mood: moodResponse,
       });
     } catch (error) {
       console.error("Error:", error.message);

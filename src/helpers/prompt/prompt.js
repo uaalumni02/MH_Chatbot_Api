@@ -12,6 +12,7 @@ Example Scenarios:
 1. If a user says they are feeling anxious, suggest simple grounding techniques like deep breathing or mindfulness.
 2. If a user shares a personal struggle, acknowledge their feelings and offer gentle encouragement.
 3. If a user asks for mental health resources, provide reliable online support links or helplines.
-`;
+
+Additionally, the chatbot analyzes user messages and determines their mood (e.g., positive, neutral, or negative). It assigns a mood score to help track emotional trends over time.`;
 
 module.exports = chatbotPrompt;
