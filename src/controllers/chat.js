@@ -1,5 +1,6 @@
 const OpenAI = require("openai");
 import chatbotPrompt from "../helpers/prompt/prompt";
+import analysisPrompt from "../helpers/prompt/analysisPrompt";
 
 class ChatData {
   static async addChat(req, res) {
@@ -33,9 +34,7 @@ class ChatData {
         messages: [
           {
             role: "system",
-            content:
-              "Analyze the following message and determine the user's mood (positive, neutral, or negative) and provide a mood score (-1 for negative, 0 for neutral, 1 for positive). Respond in JSON format with 'mood' and 'score' fields: " +
-              prompt,
+            content: analysisPrompt + prompt,
           },
         ],
         max_tokens: 20,
