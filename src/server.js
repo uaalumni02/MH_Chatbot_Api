@@ -12,6 +12,7 @@ const port = process.env.PORT || 3000;
 const router = express.Router();
 
 import userRoutes from "./routes/user.routes";
+import chatRoutes from "./routes/chat.routes";
 
 const corsOptions = {
   origin: "http://localhost:3001", // Front-end origin
@@ -34,6 +35,7 @@ try {
 }
 
 router.use("/user", userRoutes);
+router.use("/v1/chat/completions", chatRoutes);
 
 app.use("/api", router);
 
