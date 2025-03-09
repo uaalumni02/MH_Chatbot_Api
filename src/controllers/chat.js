@@ -34,11 +34,11 @@ class ChatData {
           {
             role: "system",
             content:
-              "Analyze the following message and determine the user's mood (positive, neutral, or negative) and provide a mood score (-1 for negative, 0 for neutral, 1 for positive): " +
+              "Analyze the following message and determine the user's mood (positive, neutral, or negative) and provide a mood score (-1 for negative, 0 for neutral, 1 for positive). Respond in JSON format with 'mood' and 'score' fields: " +
               prompt,
           },
         ],
-        max_tokens: 10,
+        max_tokens: 20,
         temperature: 0.5,
       });
 
@@ -46,7 +46,12 @@ class ChatData {
         throw new Error("Invalid response from OpenAI API for mood analysis");
       }
 
-      const moodResponse = moodAnalysis.choices[0].message.content;
+      let moodResponse;
+      try {
+        moodResponse = JSON.parse(moodAnalysis.choices[0].message.content);
+      } catch (e) {
+        throw new Error("Failed to parse mood analysis response");
+      }
 
       console.log(summaryResponse, moodResponse);
 
