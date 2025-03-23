@@ -13,6 +13,10 @@ const chatInformationSchema = Schema({
   response: {
     type: String,
   },
+  mood: {
+    type: Schema.Types.Mixed, // Ensure it can store objects
+    required: false,
+  },
 
   __v: {
     type: Number,

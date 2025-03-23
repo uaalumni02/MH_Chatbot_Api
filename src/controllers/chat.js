@@ -51,11 +51,12 @@ class ChatData {
         throw new Error("Failed to parse mood analysis response");
       }
 
-      // Save chat history to the database
+      // Save chat history to the database, including mood response
       const chatData = new Chat({
         userName: userName,
         prompt: prompt,
         response: summaryResponse,
+        mood: moodResponse, // Save mood to database
       });
 
       await chatData.save();
