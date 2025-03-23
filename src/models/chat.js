@@ -10,6 +10,9 @@ const chatInformationSchema = Schema({
     type: Schema.Types.Mixed,
     required: [true, "prompt is required"],
   },
+  response: {
+    type: String,
+  },
 
   __v: {
     type: Number,
