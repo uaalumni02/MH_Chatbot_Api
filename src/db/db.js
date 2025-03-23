@@ -48,6 +48,16 @@ class Db {
       throw error;
     }
   }
+  static async getChatByUserName(model, userName) {
+    try {
+      const getChatByUser = await model
+        .find({ userName })
+        .exec();
+      return getChatByUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default Db;

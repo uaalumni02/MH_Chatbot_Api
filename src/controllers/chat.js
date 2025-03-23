@@ -83,6 +83,15 @@ class ChatData {
       return Response.responseNotFound(res);
     }
   }
+  static async getChatByUser(req, res) {
+    const { userName } = req.params;
+    try {
+      const chatByUserName = await Db.getChatByUserName(Chat, userName);
+      return Response.responseOk(res, chatByUserName);
+    } catch (error) {
+      return Response.responseNotFound(res);
+    }
+  }
 }
 
 module.exports = ChatData;
