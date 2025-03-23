@@ -50,10 +50,16 @@ class Db {
   }
   static async getChatByUserName(model, userName) {
     try {
-      const getChatByUser = await model
-        .find({ userName })
-        .exec();
+      const getChatByUser = await model.find({ userName }).exec();
       return getChatByUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async removeChats(model, userName) {
+    try {
+      const deleteChats = await model.deleteMany({ userName }); // Deletes all matching chats
+      return { deletedCount: deleteChats.deletedCount }; // Return count of deleted records
     } catch (error) {
       throw error;
     }

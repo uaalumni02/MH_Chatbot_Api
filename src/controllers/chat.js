@@ -92,6 +92,18 @@ class ChatData {
       return Response.responseNotFound(res);
     }
   }
+  static async clearChatHistory(req, res) {
+    const { userName } = req.params;
+    try {
+      const clearChats = await Db.removeChats(Chat, userName);
+      return Response.responseOk(res, {
+        message: "Chat history cleared successfully",
+        deletedCount: clearChats.deletedCount,
+      });
+    } catch (error) {
+      return Response.responseServerError(res);
+    }
+  }
 }
 
 module.exports = ChatData;
