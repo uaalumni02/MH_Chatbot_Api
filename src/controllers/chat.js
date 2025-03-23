@@ -1,6 +1,7 @@
 const OpenAI = require("openai");
 import chatbotPrompt from "../helpers/prompt/prompt";
 import analysisPrompt from "../helpers/prompt/analysisPrompt";
+import * as Response from "../helpers/response/response";
 import Chat from "../models/chat";
 import Db from "../db/db";
 
@@ -72,6 +73,14 @@ class ChatData {
         success: false,
         error: "Internal Server Error",
       });
+    }
+  }
+  static async allChats(req, res) {
+    try {
+      const allChats = await Db.getAllChats(Chat);
+      return Response.responseOk(res, allChats);
+    } catch (error) {
+      return Response.responseNotFound(res);
     }
   }
 }

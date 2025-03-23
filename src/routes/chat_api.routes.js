@@ -6,7 +6,6 @@ const router = express.Router();
 
 router
   .route("/")
-  .post(checkAuth, chatController.addChat)
   .get(checkAuth, chatController.allChats);
 
 export default router;

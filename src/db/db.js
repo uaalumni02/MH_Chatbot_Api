@@ -40,6 +40,14 @@ class Db {
       throw error;
     }
   }
+  static async getAllChats(model) {
+    try {
+      const allChats = await model.find({});
+      return allChats;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default Db;
