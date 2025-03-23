@@ -32,6 +32,14 @@ class Db {
       throw error;
     }
   }
+  static async saveChatHistory(model, chat) {
+    try {
+      const newChat = await model({ ...chat });
+      return newChat.save();
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default Db;
