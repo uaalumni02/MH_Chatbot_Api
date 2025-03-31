@@ -1,4 +1,5 @@
 const OpenAI = require("openai");
+const PDFDocument = require("pdfkit");
 import chatbotPrompt from "../helpers/prompt/prompt";
 import analysisPrompt from "../helpers/prompt/analysisPrompt";
 import * as Response from "../helpers/response/response";
@@ -8,7 +9,7 @@ import Db from "../db/db";
 class ChatData {
   static async addChat(req, res) {
     try {
-      const { userName, prompt } = req.body; // Ensure userId is included
+      const { userName, prompt } = req.body;
 
       if (!userName || !prompt) {
         return res
@@ -52,7 +53,7 @@ class ChatData {
         throw new Error("Failed to parse mood analysis response");
       }
 
-      // Save chat history to the database, including mood response
+      // Save chat history to the database
       const chatData = new Chat({
         userName: userName,
         prompt: prompt,
@@ -75,6 +76,7 @@ class ChatData {
       });
     }
   }
+
   static async allChats(req, res) {
     try {
       const allChats = await Db.getAllChats(Chat);
@@ -83,6 +85,7 @@ class ChatData {
       return Response.responseNotFound(res);
     }
   }
+
   static async getChatByUser(req, res) {
     const { userName } = req.params;
     try {
@@ -92,6 +95,7 @@ class ChatData {
       return Response.responseNotFound(res);
     }
   }
+
   static async clearChatHistory(req, res) {
     const { userName } = req.params;
     try {
@@ -102,6 +106,55 @@ class ChatData {
       });
     } catch (error) {
       return Response.responseServerError(res);
+    }
+  }
+
+  static async getChatPdf(req, res) {
+    const { userName } = req.params;
+    try {
+      const chatByUserName = await Db.getChatByUserName(Chat, userName);
+
+      if (!chatByUserName || chatByUserName.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "No chat history found" });
+      }
+
+      // Create a new PDF document
+      const doc = new PDFDocument();
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=${userName}_chat.pdf`
+      );
+
+      // Pipe PDF output to response
+      doc.pipe(res);
+
+      // Title
+      doc
+        .fontSize(20)
+        .text(`Chat History`, { align: "center" });
+      doc.moveDown();
+
+      // Iterate through chat history and add prompt/response
+      chatByUserName.forEach((chat) => {
+        doc
+          .fontSize(14)
+          .fillColor("black")
+          .text(`Prompt: ${chat.prompt}`, { bold: true });
+        doc.moveDown(0.3);
+        doc.fontSize(12).fillColor("gray").text(`Response: ${chat.response}`);
+        doc.moveDown(1);
+      });
+
+      // Finalize PDF
+      doc.end();
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error generating PDF" });
     }
   }
 }
