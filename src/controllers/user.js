@@ -2,7 +2,6 @@ import Db from "../db/db";
 import User from "../models/user";
 import Token from "../helpers/jwt/token";
 import bcrypt from "../helpers/bcrypt/bcrypt";
-
 import validator from "../validator/user";
 import * as Response from "../helpers/response/response";
 
@@ -23,9 +22,7 @@ class UserData {
             _id: userId,
             role,
           } = await Db.saveUser(User, newUser);
-          let token = "";
-
-          token = Token.sign({ userName, userId, role });
+          let token = Token.sign({ userName, userId, role });
 
           res.cookie("token", token, {
             httpOnly: true,
@@ -34,7 +31,6 @@ class UserData {
           });
 
           const userData = { userName, userId, role, token };
-
           return res
             .status(201)
             .json({ message: "User created successfully", userData });
@@ -47,7 +43,6 @@ class UserData {
 
   static async userLogin(req, res) {
     const { userName, password } = req.body;
-
     try {
       const result = await validator.validateAsync(req.body);
       if (result.error) {
@@ -96,6 +91,7 @@ class UserData {
       return Response.responseNotFound(res);
     }
   }
+
   static async getUserById(req, res) {
     const { id } = req.params;
     try {
@@ -103,6 +99,18 @@ class UserData {
       return Response.responseOk(res, userById);
     } catch (error) {
       return Response.responseNotFound(res);
+    }
+  }
+  static async userLogout(req, res) {
+    try {
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Lax",
+      });
+      return res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      return Response.responseServerError(res);
     }
   }
 }
