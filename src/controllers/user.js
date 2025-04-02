@@ -64,7 +64,7 @@ class UserData {
         userId: user._id,
       });
       res.cookie("token", token, {
-        httpOnly: true,
+        // httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "Lax",
       });
