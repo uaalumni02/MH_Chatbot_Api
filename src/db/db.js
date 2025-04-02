@@ -64,6 +64,30 @@ class Db {
       throw error;
     }
   }
+  static async addJournal(model, data) {
+    try {
+      const newEntry = await model({ ...data });
+      return newEntry.save();
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getAllEntries(model) {
+    try {
+      const allEntries = await model.find({});
+      return allEntries;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getEntryByUserName(model, userName) {
+    try {
+      const getEntryByUser = await model.find({ userName }).exec();
+      return getEntryByUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default Db;

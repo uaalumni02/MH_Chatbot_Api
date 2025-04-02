@@ -80,7 +80,6 @@ class ChatData {
   static async allChats(req, res) {
     try {
       const allChats = await Db.getAllChats(Chat);
-      console.log(allChats[0].mood)
       return Response.responseOk(res, allChats);
     } catch (error) {
       return Response.responseNotFound(res);
