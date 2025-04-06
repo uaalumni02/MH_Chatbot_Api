@@ -14,6 +14,7 @@ const journalSchema = Schema(
     chat: {
       type: Schema.Types.ObjectId, // needs to take in the chat, because mood will be used to help predict text for journaling//mood data is located in chat
       required: false,
+      ref: "Chat",
     },
     __v: {
       type: Number,

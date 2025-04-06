@@ -82,7 +82,8 @@ class Db {
   }
   static async getAllEntries(model) {
     try {
-      const allEntries = await model.find({});
+      const allEntries = await model.find({})
+      .populate("userName chat")
       return allEntries;
     } catch (error) {
       throw error;
