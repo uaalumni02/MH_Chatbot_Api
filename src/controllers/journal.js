@@ -22,12 +22,13 @@ class JournalData {
       return Response.responseNotFound(res);
     }
   }
-  static async getEntryByUser(req, res) {
+  static async getEntryByUser(req, res) { //populate not working----------------------->will use AI for sentence completion based on mood etc
     const { userName } = req.params;
     try {
       const entryByUserName = await Db.getEntryByUserName(Journal, userName);
       return Response.responseOk(res, entryByUserName);
     } catch (error) {
+        console.log(error)
       return Response.responseNotFound(res);
     }
   }

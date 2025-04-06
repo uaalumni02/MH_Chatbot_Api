@@ -56,6 +56,14 @@ class Db {
       throw error;
     }
   }
+  static async getChatById(model, id) {
+    try {
+      const chat = await model.findById(id);
+      return chat;
+    } catch (error) {
+      throw error;
+    }
+  }
   static async removeChats(model, userName) {
     try {
       const deleteChats = await model.deleteMany({ userName }); // Deletes all matching chats
@@ -82,7 +90,10 @@ class Db {
   }
   static async getEntryByUserName(model, userName) {
     try {
-      const getEntryByUser = await model.find({ userName }).exec();
+      const getEntryByUser = await model
+        .find({ userName })
+        .populate("userName chat")
+        // .exec();
       return getEntryByUser;
     } catch (error) {
       throw error;

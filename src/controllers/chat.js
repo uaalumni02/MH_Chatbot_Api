@@ -86,6 +86,16 @@ class ChatData {
     }
   }
 
+  static async getChatById(req, res) {
+    const { id } = req.params;
+    try {
+      const chatById = await Db.getChatById(Chat, id);
+      return Response.responseOk(res, chatById);
+    } catch (error) {
+      return Response.responseNotFound(res);
+    }
+  }
+
   static async getChatByUser(req, res) {
     const { userName } = req.params;
     try {
