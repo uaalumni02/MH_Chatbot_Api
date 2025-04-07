@@ -22,12 +22,13 @@ class UserData {
             _id: userId,
             role,
           } = await Db.saveUser(User, newUser);
-          let token = Token.sign({ userName, userId, role });
+          const token = Token.sign({ userName, userId, role });
 
           res.cookie("token", token, {
-            httpOnly: true,
+            // Updated to match userLogin
             secure: process.env.NODE_ENV === "production",
-            sameSite: "none",
+            sameSite: "Lax",
+            // httpOnly: true, // Optional: enable for added security
           });
 
           const userData = { userName, userId, role, token };
@@ -37,6 +38,7 @@ class UserData {
         }
       }
     } catch (error) {
+      console.error("Error in addUser:", error);
       return Response.responseServerError(res);
     }
   }
@@ -48,25 +50,30 @@ class UserData {
       if (result.error) {
         return Response.responseInvalidInput(res);
       }
+
       const user = await Db.findUser(User, userName);
       if (!user) {
         return Response.responseBadAuth(res, "Invalid username or password");
       }
+
       const isSamePassword = await bcrypt.comparePassword(
         password,
         user.password
       );
+
       if (!isSamePassword) {
         return Response.responseBadAuth(res, "Invalid username or password");
       }
+
       const token = Token.sign({
         userName: user.userName,
         userId: user._id,
       });
+
       res.cookie("token", token, {
-        // httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "Lax",
+        // httpOnly: true, // Optional: enable for added security
       });
 
       return res.status(200).json({
@@ -101,6 +108,7 @@ class UserData {
       return Response.responseNotFound(res);
     }
   }
+
   static async userLogout(req, res) {
     try {
       res.clearCookie("token", {
