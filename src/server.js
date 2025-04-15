@@ -18,6 +18,7 @@ import pdfRoutes from "./routes/pdf.routes";
 import logoutRoutes from "./routes/logout.routes";
 import journalRoutes from "./routes/journal.routes";
 import chatByIdRoutes from "./routes/chat_by_id.routes";
+import journalAiRoutes from "./routes/journal_ai.routes";
 
 const corsOptions = {
   origin: "http://localhost:3001", // Front-end origin
@@ -46,6 +47,7 @@ router.use("/pdf", pdfRoutes);
 router.use("/logout", logoutRoutes);
 router.use("/journal", journalRoutes);
 router.use("/chat_id", chatByIdRoutes);
+router.use("/journal_ai", journalAiRoutes);
 
 app.use("/api", router);
 
