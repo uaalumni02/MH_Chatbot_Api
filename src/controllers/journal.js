@@ -24,7 +24,6 @@ class JournalData {
     }
   }
   static async getEntryByUser(req, res) {
-    //populate is now working....will use AI for sentence completion based on mood etc
     const { userName } = req.params;
     try {
       const entryByUserName = await Db.getEntryByUserName(Journal, userName);
@@ -34,8 +33,6 @@ class JournalData {
       return Response.responseNotFound(res);
     }
   }
-
-  //----> add journal predictive function here--------->----------------------------------------------
 
   static async predictText(req, res) {
     try {
@@ -64,7 +61,7 @@ class JournalData {
             content: prompt,
           },
         ],
-        max_tokens: 10, 
+        max_tokens: 10,
         temperature: 0.7,
       });
 
